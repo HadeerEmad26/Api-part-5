@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import '../../cache/cache_helper.dart';
+import '../cache/cache_helper.dart';
 
 class ApiInterceptor extends Interceptor{
 

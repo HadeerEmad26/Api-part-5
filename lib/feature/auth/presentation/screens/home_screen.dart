@@ -1,3 +1,4 @@
+import 'package:api_part2/core/services/service_locator.dart';
 import 'package:api_part2/feature/auth/presentation/cubit/auth_cubit.dart';
 import 'package:api_part2/feature/auth/presentation/cubit/auth_state.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +10,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => AuthCubit()..login(),
+      create: (context) => getIt<AuthCubit>()..login(),
       child: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {},
         builder: (context, state) {

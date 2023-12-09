@@ -4,7 +4,7 @@ import 'package:api_part2/feature/auth/presentation/cubit/auth_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../feature/auth/presentation/screens/home_screen.dart';
+import '../feature/auth/presentation/screens/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,9 +21,9 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AuthCubit(),
+          create: (context) => getIt<AuthCubit>(),
         ),
-        BlocProvider(create: (context) => AuthCubit()),
+        BlocProvider(create: (context) => getIt<AuthCubit>()),
       ],
       child: const MaterialApp(
         title: 'Api',

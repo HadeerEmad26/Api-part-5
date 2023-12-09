@@ -2,7 +2,7 @@ import 'package:api_part2/feature/profile/profile_state.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 
-import '../../core/database/api/api.dart';
+import '../../core/database/api/end_points.dart';
 import '../../core/database/cache/cache_helper.dart';
 import '../../core/services/service_locator.dart';
 
