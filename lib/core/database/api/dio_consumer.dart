@@ -1,7 +1,9 @@
 import 'package:api_part2/core/database/api/api_consumer.dart';
 import 'package:api_part2/core/database/api/api_interceptor.dart';
 import 'package:api_part2/core/database/api/end_points.dart';
+import 'package:api_part2/core/database/api/status_code/status_code.dart';
 import 'package:dio/dio.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 import '../../error/error_model.dart';
 import '../../error/exceptions.dart';
@@ -27,12 +29,17 @@ class DioConsumer extends ApiConsumer {
       Map<String, dynamic>? data,
       Map<String, dynamic>? headers}) async {
     try {
-      final response = await dio.delete(path,
-          queryParameters: queryParameters,
-          options: Options(
-            headers: headers,
-          ));
-      return response;
+      bool result = await InternetConnectionChecker().hasConnection;
+      if(result) {
+        final response = await dio.delete(path,
+            queryParameters: queryParameters,
+            options: Options(
+              headers: headers,
+            ));
+        return response;
+      }else{
+        throw NoInternetConnectionException(ErrorModel(errorMessage: "No Internet Connection"));
+      }
     }on DioException catch(dioError){
       _handleDioError(dioError);
     }
@@ -45,12 +52,17 @@ class DioConsumer extends ApiConsumer {
     Map<String, dynamic>? headers,
   }) async {
     try {
-      final response = await dio.get(path,
-          queryParameters: queryParameters,
-          options: Options(
-            headers: headers,
-          ));
-      return response;
+      bool result = await InternetConnectionChecker().hasConnection;
+      if(result) {
+        final response = await dio.get(path,
+            queryParameters: queryParameters,
+            options: Options(
+              headers: headers,
+            ));
+        return response;
+      }else{
+        throw NoInternetConnectionException(ErrorModel(errorMessage: "No Internet Connection"));
+      }
     }on DioException catch(dioError){
       _handleDioError(dioError);
     }
@@ -62,12 +74,17 @@ class DioConsumer extends ApiConsumer {
       Map<String, dynamic>? data,
       Map<String, dynamic>? headers}) async {
     try {
-      final response = await dio.patch(path,
-          queryParameters: queryParameters,
-          options: Options(
-            headers: headers,
-          ));
-      return response;
+      bool result = await InternetConnectionChecker().hasConnection;
+      if(result) {
+        final response = await dio.patch(path,
+            queryParameters: queryParameters,
+            options: Options(
+              headers: headers,
+            ));
+        return response;
+      }else{
+        throw NoInternetConnectionException(ErrorModel(errorMessage: "No Internet Connection"));
+      }
     }on DioException catch(dioError) {
       _handleDioError(dioError);
     }
@@ -79,12 +96,17 @@ class DioConsumer extends ApiConsumer {
       Map<String, dynamic>? data,
       Map<String, dynamic>? headers}) async {
     try {
-      final response = await dio.post(path,
-          queryParameters: queryParameters,
-          options: Options(
-            headers: headers,
-          ));
-      return response;
+      bool result = await InternetConnectionChecker().hasConnection;
+      if(result) {
+        final response = await dio.post(path,
+            queryParameters: queryParameters,
+            options: Options(
+              headers: headers,
+            ));
+        return response;
+      }else{
+        throw NoInternetConnectionException(ErrorModel(errorMessage: "No Internet Connection"));
+      }
     }on DioException catch(dioError){
       _handleDioError(dioError);
     }
@@ -103,32 +125,31 @@ class DioConsumer extends ApiConsumer {
 
       case DioExceptionType.badResponse:
         switch (dioException.response?.statusCode) {
-          case 400: //bad request
+          case StatusCode.badRequest: //bad request
             throw BadRequestException(ErrorModel.fromJson(dioException.response!.data));
 
-          case 401: //unauthorized
+          case StatusCode.unAuthorized: //unauthorized
             throw UnauthorizedException(ErrorModel.fromJson(dioException.response!.data));
 
-          case 403: //forbidden
+          case StatusCode.forbidden: //forbidden
             throw ForbiddenException(ErrorModel.fromJson(dioException.response!.data));
 
-          case 404: //notFound
+          case StatusCode.notFound: //notFound
             throw NotFoundException(ErrorModel.fromJson(dioException.response!.data));
 
-          case 409: //conflict
+          case StatusCode.conflict: //conflict
             throw ConflictException(ErrorModel.fromJson(dioException.response!.data));
-          case 504:
+          case StatusCode.gatewayServerError:
             throw BadRequestException(ErrorModel.fromJson(dioException.response!.data));
 
         // print(e.response);
         }
       case DioExceptionType.cancel:
-        throw ServerException(ErrorModel(statusCode: 500, errorMessage: dioException.toString()));
+        throw ServerException(ErrorModel(statusCode: StatusCode.internalServerError, errorMessage: dioException.toString()));
 
       case DioExceptionType.unknown:
-        throw ServerException(ErrorModel(statusCode: 500, errorMessage: dioException.toString()));
+        throw ServerException(ErrorModel(statusCode: StatusCode.gatewayServerError, errorMessage: dioException.toString()));
 
-    // throw ServerException('badResponse');
     }
   }
   }

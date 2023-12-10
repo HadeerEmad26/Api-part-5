@@ -3,6 +3,7 @@ import 'package:api_part2/feature/auth/presentation/cubit/auth_cubit.dart';
 import 'package:api_part2/feature/auth/presentation/cubit/auth_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -12,7 +13,15 @@ class HomeScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => getIt<AuthCubit>()..login(),
       child: BlocConsumer<AuthCubit, AuthState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          if(state is LoginLoadingState){
+            Fluttertoast.showToast(msg: state.message);
+          }
+          if(state is LoginErrorState){
+            Fluttertoast.showToast(msg: state.message);
+          }
+
+        },
         builder: (context, state) {
           return Scaffold(
             appBar: AppBar(

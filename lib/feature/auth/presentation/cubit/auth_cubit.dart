@@ -3,11 +3,9 @@ import 'package:api_part2/core/database/api/end_points.dart';
 import 'package:api_part2/core/database/cache/cache_helper.dart';
 import 'package:api_part2/core/services/service_locator.dart';
 import 'package:api_part2/core/utils/commens.dart';
-import 'package:api_part2/feature/auth/data/model/login_model.dart';
 import 'package:api_part2/feature/auth/data/repositry/auth_repo.dart';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
-import 'package:jwt_decoder/jwt_decoder.dart';
 
 import 'auth_state.dart';
 
@@ -19,10 +17,17 @@ class AuthCubit extends Cubit<AuthState> {
   void login() async {
      var data=  await authRepo.login(
       email:"hadeere378@gmail.com",
-      password: "hadeer1234",
+      password: "hadeer12345",
     );
-     data.fold((l) => printError(l.errorModel.errorMessage),
-             (r) => printResponse(r.message));
+     data.fold((l) {
+       printError(l.errorModel.errorMessage);
+       emit(LoginErrorState(message:l.errorModel.errorMessage ));
+     },
+             (r) {
+               printResponse(r.message);
+               emit(LoginLoadingState(message:r.message ));
+
+             });
 
 
 

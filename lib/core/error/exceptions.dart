@@ -19,27 +19,33 @@ class ConnectionTimeoutException extends ServerException {
 }
 
 class FetchDataException extends ServerException {
-  FetchDataException(super.messageModel);
+  FetchDataException(super.errorModel);
 }
 
 class BadRequestException extends ServerException {
-  BadRequestException(super.messageModel);
+  BadRequestException(super.errorModel);
 }
 
 class UnauthorizedException extends ServerException {
-  UnauthorizedException(super.messageModel);
+  UnauthorizedException(super.errorModel);
 }
 class ForbiddenException extends ServerException {
-  ForbiddenException(super.messageModel);
+  ForbiddenException(super.errorModel);
 }
 
 class NotFoundException extends ServerException {
-  NotFoundException(super.messageModel);
+  NotFoundException(super.errorModel);
 }
 
+class NoInternetConnectionException extends ServerException {
+  NoInternetConnectionException(super.errorModel,);
+}
+
+
+
 class ConflictException extends ServerException {
-  ConflictException(super.messageModel);
+  ConflictException(super.errorModel);
 }
 class CancleExeption extends ServerException {
-  CancleExeption(super.messageModel);
+  CancleExeption(super.errorModel);
 }
